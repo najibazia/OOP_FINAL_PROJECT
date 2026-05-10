@@ -2,9 +2,6 @@
 #include <cmath>
 #include <iostream>
 
-// arrow.png is 32x32, points RIGHT naturally.
-// flyingRight=true  → no flip  (arrow.png natural direction = right)
-// flyingRight=false → flip x   (mirror = points left)
 
 Projectile::Projectile(sf::Vector2f origin,
                        sf::Vector2f target,
@@ -24,16 +21,11 @@ Projectile::Projectile(sf::Vector2f origin,
     }
 
     sprite.setTexture(texture);
-    sprite.setOrigin(16.f, 16.f);   // centre of 32x32 sprite
-
-    // arrow.png points RIGHT.
-    // flyingRight=true  → scale(+2, 2) = natural right
-    // flyingRight=false → scale(-2, 2) = mirrored = left
+    sprite.setOrigin(16.f, 16.f);   
     float sx = flyingRight ? 2.f : -2.f;
     sprite.setScale(sx, 2.f);
     sprite.setPosition(position);
 
-    // Velocity: purely horizontal in the facing direction
     sf::Vector2f diff = target - origin;
     float dist = std::sqrt(diff.x*diff.x + diff.y*diff.y);
     if (dist > 0.f)
@@ -65,7 +57,6 @@ void Projectile::draw(sf::RenderWindow& window)
 
     if (texture.getSize().x == 0)
     {
-        // Fallback dot if arrow.png missing
         sf::CircleShape dot(7.f);
         dot.setFillColor(sf::Color(255, 210, 30));
         dot.setOrigin(7.f, 7.f);
