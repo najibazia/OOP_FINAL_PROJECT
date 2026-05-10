@@ -18,11 +18,8 @@ public:
     void update(float dt) override;
     void draw(sf::RenderWindow& window) override;
 
-    // Fires arrow.png in current facing direction.
-    // Returns nullptr if still on cooldown.
     std::unique_ptr<Projectile> shoot();
 
-    // How far the arrow travels before expiring
     static constexpr float ARROW_RANGE = 420.f;
 
     sf::Vector2f getPosition() const override;
@@ -36,9 +33,6 @@ private:
 
     PlayerState state;
 
-    // Sprite naturally faces LEFT.
-    // facingRight=false → scale+2 (natural=left)
-    // facingRight=true  → scale-2 (mirrored=right)
     bool facingRight;
     void applyFacing();
 
