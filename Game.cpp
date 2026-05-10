@@ -35,9 +35,6 @@ Game::Game()
     state   = GameState::MENU;
 }
 
-// ── playerShoot ───────────────────────────────────────────────────
-// Fires arrow.png in whatever direction the player is facing.
-// No targeting — pure directional shot controlled by the player.
 void Game::playerShoot()
 {
     auto arrow = player->shoot();
@@ -170,7 +167,6 @@ void Game::updatePlaying(float dt)
     gameTime   += dt;
     levelTimer += dt;
 
-    // Spawn
     while (!spawnQueue.empty() && spawnQueue.top().time <= gameTime)
     {
         SpawnEvent ev = spawnQueue.pop().data;
