@@ -7,8 +7,6 @@
 class Projectile : public Entity
 {
 public:
-    // flyingRight: true = arrow goes right, false = goes left
-    // arrow.png naturally points RIGHT, so left = flip horizontally
     Projectile(sf::Vector2f origin,
                sf::Vector2f target,
                bool         flyingRight,
