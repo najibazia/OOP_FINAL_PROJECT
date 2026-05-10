@@ -42,7 +42,6 @@ Enemy::Enemy(const std::vector<sf::Vector2f>& path,
     hpBarFill.setFillColor(sf::Color(30, 200, 30));
 }
 
-// ── update ────────────────────────────────────────────────────────
 void Enemy::update(float dt)
 {
     if (deathDone) return;
@@ -51,10 +50,6 @@ void Enemy::update(float dt)
 
     if (attacking)
     {
-        // ── Stay locked to assigned slot position ─────────────
-        // This fixes the out-of-screen bug: instead of continuing
-        // to walk after reaching the end, the enemy is pinned to
-        // a slot around the tower.
         if (slotAssigned)
         {
             position = attackSlotPos;
@@ -66,10 +61,6 @@ void Enemy::update(float dt)
     moveAlongPath(dt);
 }
 
-// ── assignAttackSlot ──────────────────────────────────────────────
-// Distributes attacking enemies evenly around the tower on a ring.
-// Each enemy gets a unique angle = (360 / totalSlots) * slotIndex.
-// This is the FIX for the "enemies walk out of frame" bug.
 void Enemy::assignAttackSlot(sf::Vector2f towerPos, int slotIndex, int totalSlots)
 {
     const float ORBIT_RADIUS = 55.f;
@@ -81,7 +72,6 @@ void Enemy::assignAttackSlot(sf::Vector2f towerPos, int slotIndex, int totalSlot
     };
     slotAssigned = true;
 
-    // Immediately snap to slot if already attacking
     if (attacking)
     {
         position = attackSlotPos;
@@ -89,7 +79,6 @@ void Enemy::assignAttackSlot(sf::Vector2f towerPos, int slotIndex, int totalSlot
     }
 }
 
-// ── updateAnimation ───────────────────────────────────────────────
 void Enemy::updateAnimation(float dt)
 {
     frameTimer += dt;
@@ -141,7 +130,6 @@ void Enemy::applyFrame()
         sf::IntRect(frameIndex * FRAME_W, 0, FRAME_W, FRAME_H));
 }
 
-// ── moveAlongPath ─────────────────────────────────────────────────
 void Enemy::moveAlongPath(float dt)
 {
     if (waypointIndex >= (int)path.size())
@@ -173,7 +161,6 @@ void Enemy::moveAlongPath(float dt)
     shape.setPosition(position);
 }
 
-// ── separate ──────────────────────────────────────────────────────
 void Enemy::separate(const std::vector<std::unique_ptr<Enemy>>& all, int myIndex)
 {
     if (attacking || isDead()) return;
@@ -200,8 +187,6 @@ void Enemy::separate(const std::vector<std::unique_ptr<Enemy>>& all, int myIndex
     position += push;
     shape.setPosition(position);
 }
-
-// ── draw ──────────────────────────────────────────────────────────
 void Enemy::draw(sf::RenderWindow& window)
 {
     if (deathDone) return;
@@ -224,8 +209,6 @@ void Enemy::drawHealthBar(sf::RenderWindow& window)
     hpBarFill.setPosition(barPos);
     window.draw(hpBarFill);
 }
-
-// ── takeDamage ────────────────────────────────────────────────────
 void Enemy::takeDamage(float amount)
 {
     hp -= amount;
