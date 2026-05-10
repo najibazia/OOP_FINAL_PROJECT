@@ -2,11 +2,6 @@
 #include <cmath>
 #include <iostream>
 
-// ── IMPORTANT: the archer sprite naturally faces LEFT ─────────────
-// scale.x = +2  →  shows LEFT  (natural direction)
-// scale.x = -2  →  shows RIGHT (mirrored)
-// So:  facingRight=true  → scale=-2   (mirror = right)
-//      facingRight=false → scale=+2   (natural = left)
 
 Player::Player(sf::Vector2f startPos,
                sf::Vector2f towerPos,
@@ -14,7 +9,7 @@ Player::Player(sf::Vector2f startPos,
     : towerPos(towerPos),
       mapW(mapW), mapH(mapH),
       state(PlayerState::IDLE),
-      facingRight(false),          // start facing LEFT (natural for this sprite)
+      facingRight(false),         
       attackCooldown(0.4f),
       attackTimer(0.4f),
       nextArrowID(0),
@@ -36,17 +31,11 @@ Player::Player(sf::Vector2f startPos,
     shape.setPosition(position);
 }
 
-// ── applyFacing ───────────────────────────────────────────────────
-// Sprite naturally faces LEFT.
-// facingRight=true  → flip horizontally (scale x = -2) = faces RIGHT
-// facingRight=false → natural (scale x = +2)           = faces LEFT
 void Player::applyFacing()
 {
     float sx = facingRight ? -2.f : 2.f;
     shape.setScale(sx, 2.f);
 }
-
-// ── update ────────────────────────────────────────────────────────
 void Player::update(float dt)
 {
     attackTimer += dt;
@@ -54,7 +43,6 @@ void Player::update(float dt)
     updateMovement(dt);
     updateAnimation(dt);
 
-    // Attack animation done → back to idle
     if (state == PlayerState::ATTACK && frameIndex >= FRAME_COUNT - 1)
     {
         state      = PlayerState::IDLE;
@@ -67,9 +55,6 @@ void Player::update(float dt)
     shape.setPosition(position);
 }
 
-// ── updateMovement ────────────────────────────────────────────────
-// LEFT/A  → move left,  facingRight = false  (natural sprite = left)
-// RIGHT/D → move right, facingRight = true   (mirrored sprite = right)
 void Player::updateMovement(float dt)
 {
     sf::Vector2f dir(0.f, 0.f);
@@ -99,10 +84,6 @@ void Player::updateMovement(float dt)
     blockTower();
 }
 
-// ── shoot ─────────────────────────────────────────────────────────
-// Fires arrow.png in the direction the player is currently facing.
-// facingRight=true  → arrow flies RIGHT (+x direction)
-// facingRight=false → arrow flies LEFT  (-x direction)
 std::unique_ptr<Projectile> Player::shoot()
 {
     if (attackTimer < attackCooldown)
@@ -110,26 +91,23 @@ std::unique_ptr<Projectile> Player::shoot()
 
     attackTimer = 0.f;
 
-    // Play attack animation
     state      = PlayerState::ATTACK;
     frameIndex = 0;
     frameTimer = 0.f;
     shape.setTexture(attackTex);
     applyFacing();
 
-    // Arrow travels ARROW_RANGE px in the facing direction
     float        dx     = facingRight ? ARROW_RANGE : -ARROW_RANGE;
     sf::Vector2f target = { position.x + dx, position.y };
 
     return std::make_unique<Projectile>(
         position,
         target,
-        facingRight,   // pass direction so Projectile knows how to flip
+        facingRight,   
         40.f,
         nextArrowID++);
 }
 
-// ── helpers ───────────────────────────────────────────────────────
 void Player::clampToMap()
 {
     const float HALF = (float)FRAME_W;
