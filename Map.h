@@ -17,7 +17,6 @@ struct Decor
 class Map
 {
 public:
-    // level = 1 or 2 — picks different path layout
     Map(int cols, int rows, float tileSize, int level);
 
     void draw(sf::RenderWindow& window);
@@ -40,7 +39,7 @@ private:
 
     int   cols, rows;
     float tileSize;
-    int   level;     // which level layout to use
+    int   level;     
 
     sf::Texture grassTexture;
     sf::Texture pathTexture;
