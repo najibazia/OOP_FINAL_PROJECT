@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Game",
+            "type": "shell",
+            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-IC:\\SFML-3.1.0_mingw64\\include",
+                "main.cpp",
+                "Game.cpp",
+                "Map.cpp",
+                "Tile.cpp",
+                "Enemy.cpp",
+                "Tower.cpp",
+                "Projectile.cpp",
+                "Player.cpp",
+                "-LC:\\SFML-3.1.0_mingw64\\lib",
+                "-lsfml-graphics",
+                "-lsfml-window",
+                "-lsfml-system",
+                "-lsfml-audio",
+                "-o",
+                "game.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
