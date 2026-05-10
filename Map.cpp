@@ -4,8 +4,6 @@
 #include "Map.h"
 #include <iostream>
 
-// ── Level 1 layout — straight path ───────────────────
-// Enemies enter top-left, go down col 0, turn right along row 4
 static const int LAYOUT1[10][16] =
 {
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -20,14 +18,6 @@ static const int LAYOUT1[10][16] =
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 };
 
-// ── Level 2 layout — winding S-curve path ────────────
-// Enemies enter top-left, wind through the map in an S-shape
-//
-//  ↓ col0 rows 0-2
-//  → row2 cols 0-8
-//  ↓ col8 rows 2-7
-//  → row7 cols 8-15  (exit right — tower at col13 row7)
-//
 static const int LAYOUT2[10][16] =
 {
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -99,24 +89,20 @@ void Map::buildPath()
 {
     if (level == 1)
     {
-        // down col 0 rows 0-4, then right row 4 cols 0-12
         for (int r = 0; r <= 4; r++)
             path.push_back(getTile(0, r).getCenter());
         for (int c = 1; c <= 12; c++)
             path.push_back(getTile(c, 4).getCenter());
     }
-    else // level 2 — S-curve
+    else 
     {
-        // down col 0 rows 0-2
+       
         for (int r = 0; r <= 2; r++)
             path.push_back(getTile(0, r).getCenter());
-        // right row 2 cols 1-8
         for (int c = 1; c <= 8; c++)
             path.push_back(getTile(c, 2).getCenter());
-        // down col 8 rows 3-7
         for (int r = 3; r <= 7; r++)
             path.push_back(getTile(8, r).getCenter());
-        // right row 7 cols 9-12
         for (int c = 9; c <= 12; c++)
             path.push_back(getTile(c, 7).getCenter());
     }
@@ -144,18 +130,15 @@ void Map::buildDecorations()
     decorations.reserve(200);
     float h = tileSize / 2.f;
 
-    // trees top border
     for (int c = 1; c < cols; c += 2)
         if (!isPathCell(c, 0, level))
             placeDecor("assets/tree.png",
                        c*tileSize+h*0.3f, 0*tileSize+h*0.1f, 0.85f);
-    // trees bottom border
     for (int c = 1; c < cols; c += 2)
         if (!isPathCell(c, 9, level))
             placeDecor("assets/tree.png",
                        c*tileSize+h*0.3f, 9*tileSize+h*0.1f, 0.85f);
 
-    // rocks and flowers scattered on non-path tiles
     for (int r = 1; r < rows-1; r++)
         for (int c = 1; c < cols-1; c++)
         {
